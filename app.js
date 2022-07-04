@@ -3,11 +3,13 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const bodyParser = require("body-parser");
+const ejsMate = require("ejs-mate");
 const methodOverride = require("method-override");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 //============================IMPORT MODULES============================//
 const Campground = require("./models/campground"); //mongoose model
+const { isMap } = require("util/types");
 //==============================MONGOOSE===============================//
 mongoose
     .connect("mongodb://localhost:27017/yelpCamp")
@@ -21,9 +23,11 @@ mongoose
 //==============================SETTING===============================//
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+app.engine("ejs", ejsMate);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
+app.use(express.static(path.join(__dirname, "public")));
 //==============================HTTP REQUESTS=============================//
 //============R : HOME PAGE============//
 app.get("/", (req, res) => {
@@ -76,9 +80,27 @@ app.put("/campgrounds/:id", async (req, res) => {
 app.delete("/campgrounds/:id", async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
-    res.redirect('/campgrounds')
+    res.redirect("/campgrounds");
 });
 //==============================SERVER===============================//
 app.listen(3000, () => {
     console.log("App serving on Port 3000!");
 });
+
+//=================UNSPLACH API======================//
+/*
+https://api.unsplash.com/
+Get a random photo ==> GET /photos/random
+
+param ==>	Description
+collections ==>	Public collection ID(‘s) to filter selection. If multiple, comma-separated
+topics ==>	Public topic ID(‘s) to filter selection. If multiple, comma-separated
+username ==>	Limit selection to a single user.
+query ==>	Limit selection to photos matching a search term.
+orientation ==>	Filter by photo orientation. (Valid values: landscape, portrait, squarish)
+content_filter ==>	Limit results by content safety. Default: low. Valid values are low and high.
+count ==>	The number of photos to return. (Default: 1; max: 30)
+
+*/
+
+
