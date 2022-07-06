@@ -67,3 +67,19 @@ const getImg = async () => {
 };
 getImg()
 */
+
+//=================UNSPLACH API======================//
+/*
+https://api.unsplash.com/
+Get a random photo ==> GET /photos/random
+
+param ==>	Description
+collections ==>	Public collection ID(‘s) to filter selection. If multiple, comma-separated
+topics ==>	Public topic ID(‘s) to filter selection. If multiple, comma-separated
+username ==>	Limit selection to a single user.
+query ==>	Limit selection to photos matching a search term.
+orientation ==>	Filter by photo orientation. (Valid values: landscape, portrait, squarish)
+content_filter ==>	Limit results by content safety. Default: low. Valid values are low and high.
+count ==>	The number of photos to return. (Default: 1; max: 30)
+
+*/
