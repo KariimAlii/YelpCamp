@@ -9,3 +9,11 @@ body {
 .card-body {
     background-color: transparent;
 }
+.rating-card {
+    background-color: transparent;
+}
+.rating {
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+}

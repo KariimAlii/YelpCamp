@@ -6,15 +6,18 @@ const bodyParser = require("body-parser");
 const ejsMate = require("ejs-mate");
 const methodOverride = require("method-override");
 
-const { campgroundSchema } = require("./schemas.js");
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 //============================IMPORT MODULES============================//
-const Campground = require("./models/campground"); //mongoose model
-
+//==========IMPORT MODELS==========//
+const Campground = require("./models/campground");
+const Review = require("./models/review");
+//==========IMPORT UTILS==========//
 const ExpressError = require("./utils/ExpressError");
 const catchAsync = require("./utils/catchAsync");
+//==========IMPORT Joi Schemas==========//
+const { campgroundSchema, reviewSchema } = require("./schemas.js");
 //==============================MONGOOSE===============================//
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 mongoose
     .connect("mongodb://localhost:27017/yelpCamp")
     .then(() => {
@@ -35,6 +38,16 @@ app.use(express.static(path.join(__dirname, "public")));
 //==============================VALIDATION MIDDLEWARE===============================//
 const validateCampground = (req, res, next) => {
     const { error } = campgroundSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map((el) => el.message).join(",");
+        console.log(msg);
+        throw new ExpressError(msg, 400);
+    } else {
+        next();
+    }
+};
+const validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
     if (error) {
         const msg = error.details.map((el) => el.message).join(",");
         console.log(msg);
@@ -66,7 +79,7 @@ app.get(
     "/campgrounds/:id",
     catchAsync(async (req, res) => {
         const { id } = req.params;
-        const campground = await Campground.findById(id);
+        const campground = await Campground.findById(id).populate("reviews");
         // you could use findById(req.params.id) without destructuring
         res.render("campgrounds/show", { campground });
     })
@@ -87,6 +100,19 @@ app.post(
     catchAsync(async (req, res, next) => {
         //if (!req.body.campground) throw new ExpressError("Invalid Campground Data", 400);
         const campground = new Campground(req.body.campground);
+        await campground.save();
+        res.redirect(`/campgrounds/${campground._id}`);
+    })
+);
+//============C : A New Review============//
+app.post(
+    "/campgrounds/:id/reviews",
+    validateReview,
+    catchAsync(async (req, res, next) => {
+        const campground = await Campground.findById(req.params.id);
+        const review = new Review(req.body.review);
+        campground.reviews.push(review);
+        await review.save();
         await campground.save();
         res.redirect(`/campgrounds/${campground._id}`);
     })
@@ -116,6 +142,23 @@ app.delete(
         const { id } = req.params;
         await Campground.findByIdAndDelete(id);
         res.redirect("/campgrounds");
+    })
+);
+//============D : Delete a Review============//
+app.delete(
+    "/campgrounds/:campID/reviews/:reviewID",
+    catchAsync(async (req, res, next) => {
+        const { campID, reviewID } = req.params;
+
+        await Review.findByIdAndDelete(reviewID);
+        const campground = await Campground.findByIdAndUpdate(campID, {
+            $pull: { reviews: reviewID },
+        });
+
+
+        console.log(campground.reviews);
+        console.log(reviewID);
+        res.redirect(`/campgrounds/${campID}`);
     })
 );
 //============All Unmatched Http Requests============//
