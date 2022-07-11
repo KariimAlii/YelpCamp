@@ -6,6 +6,36 @@ const bodyParser = require("body-parser");
 const ejsMate = require("ejs-mate");
 const methodOverride = require("method-override");
 
+//==============================SETTING===============================//
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+app.engine("ejs", ejsMate);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(methodOverride("_method"));
+app.use(express.static(path.join(__dirname, "public")));
+//==============================SESSION===============================//
+const session = require("express-session");
+const sessionConfig = {
+    secret: "KimoComposer",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7, //1week in ms
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+    },
+};
+app.use(session(sessionConfig));
+
+//==============================Flash===============================//
+const flash = require("connect-flash");
+app.use(flash());
+app.use((req, res, next) => {
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    next();
+});
 //============================IMPORT MODULES============================//
 //==========IMPORT MODELS==========//
 const Campground = require("./models/campground");
@@ -27,140 +57,21 @@ mongoose
         console.log("MONGO ERROR OCCURED");
         console.log(err);
     });
-//==============================SETTING===============================//
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-app.engine("ejs", ejsMate);
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(methodOverride("_method"));
-app.use(express.static(path.join(__dirname, "public")));
-//==============================VALIDATION MIDDLEWARE===============================//
-const validateCampground = (req, res, next) => {
-    const { error } = campgroundSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map((el) => el.message).join(",");
-        console.log(msg);
-        throw new ExpressError(msg, 400);
-    } else {
-        next();
-    }
-};
-const validateReview = (req, res, next) => {
-    const { error } = reviewSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map((el) => el.message).join(",");
-        console.log(msg);
-        throw new ExpressError(msg, 400);
-    } else {
-        next();
-    }
-};
+
+//============================Routes============================//
+const campgroundsRouter = require("./routes/campgrounds");
+const reviewsRouter = require("./routes/reviews");
+
+app.use("/campgrounds", campgroundsRouter);
+app.use("/campgrounds/:id/reviews", reviewsRouter);
+
 //==============================HTTP REQUESTS=============================//
 //============R : HOME PAGE============//
+
 app.get("/", (req, res) => {
     res.render("home");
 });
-//============R : INDEX============//
-app.get(
-    "/campgrounds",
-    catchAsync(async (req, res) => {
-        const campgrounds = await Campground.find({});
-        res.render("campgrounds/index", { campgrounds });
-    })
-);
-//============R : A New Campground FORM============//
-app.get("/campgrounds/new", (req, res) => {
-    res.render("campgrounds/new");
-});
 
-//============R : A Campground Details============//
-app.get(
-    "/campgrounds/:id",
-    catchAsync(async (req, res) => {
-        const { id } = req.params;
-        const campground = await Campground.findById(id).populate("reviews");
-        // you could use findById(req.params.id) without destructuring
-        res.render("campgrounds/show", { campground });
-    })
-);
-//============R : Edit Campground FORM============//
-app.get(
-    "/campgrounds/:id/edit",
-    catchAsync(async (req, res) => {
-        const { id } = req.params;
-        const campground = await Campground.findById(id);
-        res.render("campgrounds/edit", { campground });
-    })
-);
-//============C : A New Campground============//
-app.post(
-    "/campgrounds",
-    validateCampground,
-    catchAsync(async (req, res, next) => {
-        //if (!req.body.campground) throw new ExpressError("Invalid Campground Data", 400);
-        const campground = new Campground(req.body.campground);
-        await campground.save();
-        res.redirect(`/campgrounds/${campground._id}`);
-    })
-);
-//============C : A New Review============//
-app.post(
-    "/campgrounds/:id/reviews",
-    validateReview,
-    catchAsync(async (req, res, next) => {
-        const campground = await Campground.findById(req.params.id);
-        const review = new Review(req.body.review);
-        campground.reviews.push(review);
-        await review.save();
-        await campground.save();
-        res.redirect(`/campgrounds/${campground._id}`);
-    })
-);
-//============U : Update a Campground============//
-app.put(
-    "/campgrounds/:id",
-    validateCampground,
-    catchAsync(async (req, res) => {
-        const { id } = req.params;
-
-        const campground = await Campground.findByIdAndUpdate(
-            id,
-            req.body.campground, // {...req.body.campground}
-            {
-                runValidators: true,
-                new: true,
-            }
-        );
-        res.redirect(`/campgrounds/${campground._id}`);
-    })
-);
-//============D : Delete a Campground============//
-app.delete(
-    "/campgrounds/:id",
-    catchAsync(async (req, res) => {
-        const { id } = req.params;
-        await Campground.findByIdAndDelete(id);
-        res.redirect("/campgrounds");
-    })
-);
-//============D : Delete a Review============//
-app.delete(
-    "/campgrounds/:campID/reviews/:reviewID",
-    catchAsync(async (req, res, next) => {
-        const { campID, reviewID } = req.params;
-
-        await Review.findByIdAndDelete(reviewID);
-        const campground = await Campground.findByIdAndUpdate(campID, {
-            $pull: { reviews: reviewID },
-        });
-
-
-        console.log(campground.reviews);
-        console.log(reviewID);
-        res.redirect(`/campgrounds/${campID}`);
-    })
-);
 //============All Unmatched Http Requests============//
 app.all("*", (req, res, next) => {
     next(new ExpressError("Page Not Found", 404));
