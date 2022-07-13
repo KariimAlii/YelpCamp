@@ -14,6 +14,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
+//============================IMPORT MODULES============================//
+//==========IMPORT MODELS==========//
+const Campground = require("./models/campground");
+const Review = require("./models/review");
+const User = require("./models/user");
+//==========IMPORT UTILS==========//
+const ExpressError = require("./utils/ExpressError");
+const catchAsync = require("./utils/catchAsync");
+//==========IMPORT Joi Schemas==========//
+const { campgroundSchema, reviewSchema } = require("./schemas.js");
+//==========IMPORT Middleware==========//
+const { isLoggedIn } = require("./middleware");
 //==============================SESSION===============================//
 const session = require("express-session");
 const sessionConfig = {
@@ -26,25 +38,37 @@ const sessionConfig = {
         maxAge: 1000 * 60 * 60 * 24 * 7,
     },
 };
-app.use(session(sessionConfig));
 
+//app.use(passport.authenticate('session'));
+
+//his can also be accomplished, more succinctly, using the passport.session() alias
+app.use(session(sessionConfig));
 //==============================Flash===============================//
 const flash = require("connect-flash");
 app.use(flash());
+
+//===========================Authentication============================//
+//==============================Passport===============================//
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+// First Step : Configure the passport-local strategy
+// Second Step :  Register by calling .use()
+// Third Step : Authenticate
+// use static authenticate method of model in LocalStrategy
+//passport-local-mongoose adds a helper method createStrategy as static method to your schema. The createStrategy is responsible to setup passport-local LocalStrategy with the correct options.
+passport.use(User.createStrategy());
+//====login session=======//
+app.use(passport.session());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+//==============================Res.Locals===============================//
 app.use((req, res, next) => {
+    console.log(req.session);
+    res.locals.currentUser = req.user;
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
     next();
 });
-//============================IMPORT MODULES============================//
-//==========IMPORT MODELS==========//
-const Campground = require("./models/campground");
-const Review = require("./models/review");
-//==========IMPORT UTILS==========//
-const ExpressError = require("./utils/ExpressError");
-const catchAsync = require("./utils/catchAsync");
-//==========IMPORT Joi Schemas==========//
-const { campgroundSchema, reviewSchema } = require("./schemas.js");
 //==============================MONGOOSE===============================//
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
@@ -61,17 +85,25 @@ mongoose
 //============================Routes============================//
 const campgroundsRouter = require("./routes/campgrounds");
 const reviewsRouter = require("./routes/reviews");
-
+const usersRouter = require("./routes/users");
 app.use("/campgrounds", campgroundsRouter);
 app.use("/campgrounds/:id/reviews", reviewsRouter);
-
+app.use("/", usersRouter);
 //==============================HTTP REQUESTS=============================//
 //============R : HOME PAGE============//
 
 app.get("/", (req, res) => {
     res.render("home");
 });
-
+//============R : Fake User Register Form============//
+app.get("/fakeUser", async (req, res) => {
+    const user = new User({
+        email: "coltttt@gmail.com",
+        username: "Colt Steele",
+    });
+    const newUser = await User.register(user, "K123");
+    res.send(newUser);
+});
 //============All Unmatched Http Requests============//
 app.all("*", (req, res, next) => {
     next(new ExpressError("Page Not Found", 404));

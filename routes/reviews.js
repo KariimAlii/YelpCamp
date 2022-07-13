@@ -23,7 +23,8 @@ const Campground = require("../models/campground");
 const Review = require("../models/review");
 //==========IMPORT Joi Schemas==========//
 const { reviewSchema } = require("../schemas.js");
-
+//==========IMPORT Middleware==========//
+const { isLoggedIn } = require("../middleware");
 //=========================Validation Middleware=========================//
 
 const validateReview = (req, res, next) => {

@@ -26,7 +26,8 @@ const Campground = require("../models/campground");
 const Review = require("../models/review");
 //==========IMPORT Joi Schemas==========//
 const { campgroundSchema } = require("../schemas.js");
-
+//==========IMPORT Middleware==========//
+const { isLoggedIn } = require("../middleware");
 //=========================Validation Middleware=========================//
 const validateCampground = (req, res, next) => {
     const { error } = campgroundSchema.validate(req.body);
@@ -50,7 +51,7 @@ router.get(
     })
 );
 //============R : A New Campground FORM============//
-router.get("/new", (req, res) => {
+router.get("/new",isLoggedIn, (req, res) => {
     res.render("campgrounds/new");
 });
 
@@ -71,6 +72,7 @@ router.get(
 //============R : Edit Campground FORM============//
 router.get(
     "/:id/edit",
+    isLoggedIn,
     catchAsync(async (req, res) => {
         const { id } = req.params;
         const campground = await Campground.findById(id);
@@ -84,6 +86,7 @@ router.get(
 //============C : A New Campground============//
 router.post(
     "/",
+    isLoggedIn,
     validateCampground,
     catchAsync(async (req, res, next) => {
         //if (!req.body.campground) throw new ExpressError("Invalid Campground Data", 400);
@@ -98,6 +101,7 @@ router.post(
 router.put(
     "/:id",
     validateCampground,
+    isLoggedIn,
     catchAsync(async (req, res) => {
         const { id } = req.params;
 

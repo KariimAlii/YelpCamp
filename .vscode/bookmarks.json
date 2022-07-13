@@ -9,69 +9,134 @@
 					"label": "Definitions"
 				},
 				{
-					"line": 12,
+					"line": 18,
 					"column": 0,
 					"label": "Modules"
 				},
 				{
-					"line": 17,
+					"line": 52,
 					"column": 0,
-					"label": "Mongoose"
-				},
-				{
-					"line": 27,
-					"column": 0,
-					"label": "SETTING"
-				},
-				{
-					"line": 35,
-					"column": 0,
-					"label": "Validation Middleware Function"
-				},
-				{
-					"line": 47,
-					"column": 0,
-					"label": "R: Home"
-				},
-				{
-					"line": 51,
-					"column": 0,
-					"label": "R: Index"
-				},
-				{
-					"line": 59,
-					"column": 0,
-					"label": "R : Creation Form"
+					"label": "Authentication"
 				},
 				{
 					"line": 64,
 					"column": 0,
-					"label": "R: Details"
+					"label": "RES>LOCALS"
 				},
 				{
-					"line": 74,
+					"line": 75,
 					"column": 0,
-					"label": "R: Edit"
+					"label": "Mongoose"
 				},
 				{
-					"line": 83,
+					"line": 86,
 					"column": 0,
-					"label": "C: New"
+					"label": "Routes"
 				},
 				{
-					"line": 94,
+					"line": 95,
 					"column": 0,
-					"label": "U : update"
+					"label": "R:Home"
 				},
 				{
-					"line": 121,
+					"line": 108,
 					"column": 0,
 					"label": "Unmatched Req"
 				},
 				{
-					"line": 137,
+					"line": 117,
+					"column": 0,
+					"label": "Error Handler"
+				},
+				{
+					"line": 124,
 					"column": 0,
 					"label": "SERVER"
+				}
+			]
+		},
+		{
+			"path": "routes/campgrounds.js",
+			"bookmarks": [
+				{
+					"line": 31,
+					"column": 0,
+					"label": "validate Camp"
+				},
+				{
+					"line": 45,
+					"column": 0,
+					"label": "R: Index"
+				},
+				{
+					"line": 53,
+					"column": 0,
+					"label": "R: New Camp Form"
+				},
+				{
+					"line": 58,
+					"column": 0,
+					"label": "R: details"
+				},
+				{
+					"line": 72,
+					"column": 0,
+					"label": "R: Edit Form"
+				},
+				{
+					"line": 86,
+					"column": 0,
+					"label": "C: New Camp"
+				},
+				{
+					"line": 100,
+					"column": 0,
+					"label": "U: Update Camp"
+				},
+				{
+					"line": 120,
+					"column": 0,
+					"label": "D: Delete Camp"
+				}
+			]
+		},
+		{
+			"path": "routes/reviews.js",
+			"bookmarks": [
+				{
+					"line": 29,
+					"column": 0,
+					"label": "validateReview"
+				},
+				{
+					"line": 45,
+					"column": 0,
+					"label": "C: New Review"
+				},
+				{
+					"line": 62,
+					"column": 0,
+					"label": "D: Delete Review"
+				}
+			]
+		},
+		{
+			"path": "routes/users.js",
+			"bookmarks": [
+				{
+					"line": 68,
+					"column": 0,
+					"label": "R: Login Form"
+				},
+				{
+					"line": 72,
+					"column": 0,
+					"label": "Login Authenticate"
+				},
+				{
+					"line": 88,
+					"column": 0,
+					"label": "Logout Authenticate"
 				}
 			]
 		}
