@@ -21,7 +21,7 @@
 				{
 					"line": 64,
 					"column": 0,
-					"label": "RES>LOCALS"
+					"label": "RES.LOCALS"
 				},
 				{
 					"line": 75,
@@ -79,22 +79,22 @@
 					"label": "R: details"
 				},
 				{
-					"line": 72,
+					"line": 82,
 					"column": 0,
 					"label": "R: Edit Form"
 				},
 				{
-					"line": 86,
+					"line": 97,
 					"column": 0,
 					"label": "C: New Camp"
 				},
 				{
-					"line": 100,
+					"line": 112,
 					"column": 0,
 					"label": "U: Update Camp"
 				},
 				{
-					"line": 120,
+					"line": 132,
 					"column": 0,
 					"label": "D: Delete Camp"
 				}
@@ -114,7 +114,7 @@
 					"label": "C: New Review"
 				},
 				{
-					"line": 62,
+					"line": 63,
 					"column": 0,
 					"label": "D: Delete Review"
 				}
@@ -124,19 +124,44 @@
 			"path": "routes/users.js",
 			"bookmarks": [
 				{
-					"line": 68,
+					"line": 61,
 					"column": 0,
 					"label": "R: Login Form"
 				},
 				{
-					"line": 72,
+					"line": 65,
 					"column": 0,
 					"label": "Login Authenticate"
 				},
 				{
-					"line": 88,
+					"line": 82,
 					"column": 0,
 					"label": "Logout Authenticate"
+				},
+				{
+					"line": 93,
+					"column": 0,
+					"label": "Users"
+				}
+			]
+		},
+		{
+			"path": "middleware.js",
+			"bookmarks": [
+				{
+					"line": 5,
+					"column": 0,
+					"label": "isLoggedIn"
+				},
+				{
+					"line": 17,
+					"column": 0,
+					"label": "checkReturnTo"
+				},
+				{
+					"line": 24,
+					"column": 0,
+					"label": "isAuthor"
 				}
 			]
 		}

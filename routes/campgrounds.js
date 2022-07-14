@@ -27,7 +27,7 @@ const Review = require("../models/review");
 //==========IMPORT Joi Schemas==========//
 const { campgroundSchema } = require("../schemas.js");
 //==========IMPORT Middleware==========//
-const { isLoggedIn } = require("../middleware");
+const { isLoggedIn, isAuthor } = require("../middleware");
 //=========================Validation Middleware=========================//
 const validateCampground = (req, res, next) => {
     const { error } = campgroundSchema.validate(req.body);
@@ -51,7 +51,7 @@ router.get(
     })
 );
 //============R : A New Campground FORM============//
-router.get("/new",isLoggedIn, (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
     res.render("campgrounds/new");
 });
 
@@ -60,12 +60,22 @@ router.get(
     "/:id",
     catchAsync(async (req, res) => {
         const { id } = req.params;
-        const campground = await Campground.findById(id).populate("reviews");
+        const campground = await Campground.findById(id)
+            .populate({
+                path: "reviews",
+                populate: {
+                    path: "author",
+                },
+            })
+            .populate("author");
         if (!campground) {
             req.flash("error", "Cannot find that campground!");
             return res.redirect("/campgrounds");
         }
-        // you could use findById(req.params.id) without destructuring
+
+        //console.log(res.locals.currentUser)
+        //console.log(campground.author)
+        // Note: either you can compare (res.locals.currentUser) with (campground.author) or you can compare their ObjectId
         res.render("campgrounds/show", { campground });
     })
 );
@@ -73,6 +83,7 @@ router.get(
 router.get(
     "/:id/edit",
     isLoggedIn,
+    isAuthor,
     catchAsync(async (req, res) => {
         const { id } = req.params;
         const campground = await Campground.findById(id);
@@ -91,6 +102,7 @@ router.post(
     catchAsync(async (req, res, next) => {
         //if (!req.body.campground) throw new ExpressError("Invalid Campground Data", 400);
         const campground = new Campground(req.body.campground);
+        campground.author = req.user._id;
         await campground.save();
         req.flash("success", "You created a new campground");
         res.redirect(`/campgrounds/${campground._id}`);
@@ -100,11 +112,11 @@ router.post(
 //============U : Update a Campground============//
 router.put(
     "/:id",
-    validateCampground,
     isLoggedIn,
+    isAuthor,
+    validateCampground,
     catchAsync(async (req, res) => {
         const { id } = req.params;
-
         const campground = await Campground.findByIdAndUpdate(
             id,
             req.body.campground, // {...req.body.campground}
@@ -120,6 +132,7 @@ router.put(
 //============D : Delete a Campground============//
 router.delete(
     "/:id",
+    isAuthor,
     catchAsync(async (req, res) => {
         const { id } = req.params;
         await Campground.findByIdAndDelete(id);

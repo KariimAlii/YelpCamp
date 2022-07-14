@@ -1,5 +1,28 @@
-<% layout('layouts/boilerplate') %>  
 
+      <!--
+ObjectIDs are objects so if you just compare them with == you're comparing their references. If you want to compare their values you need to use the ObjectID.equals method:
+Use .equals when comparing ObjectId on two mongoDocuments like this
+results.userId.equals(AnotherMongoDocument._id)
+Use .toString() when comparing a string representation of ObjectId to an ObjectId of a mongoDocument. like this
+results.userId === AnotherMongoDocument._id.toString()
+
+***********************************************************************************************************************************************************************
+
+Colt mentioned that campground.author in the show.ejs file is an id, but actually, it isn't.
+
+As it is populated before passing it to the template so it is an object
+
+It is an ID only in the router.post('/',...... ie before populating
+
+campground.author is an object and currentUser is an object, so, I think that it will be more accurate for this to be
+
+campground.author.equals(currentUser)
+
+Or
+
+campground.author._id.equals(currentUser._id)
+      -->
+<% layout('layouts/boilerplate') %>  
 <div class="row mb-4">
   <div class="col-6">
     <div class="card p-2">
@@ -11,8 +34,8 @@
       <ul class="list-group list-group-flush ">
         <li class="list-group-item bg-transparent"><%= campground.location %></li>
         <li class="list-group-item bg-transparent"><%= campground.price %>$/night</li>
-
       </ul>
+      <% if (currentUser && currentUser._id.equals(campground.author._id)) { %> 
       <div class="card-body d-flex justify-content-between">
           <a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-success">Edit</a>
           <form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST" >
@@ -20,9 +43,14 @@
           </form>
           <a href="/campgrounds" class="btn btn-primary" >All Campgrounds</a>
       </div>
+      <% } %> 
+      <div class="card-footer text-muted text-center">
+        Submitted By : <%= campground.author.username %>
+      </div>
     </div>
   </div>
   <div class="col-6">
+    <% if (currentUser) { %>
     <h2>Leave a Review</h2>
     <form class="mb-3 validated-form" action="/campgrounds/<%= campground._id %>/reviews"  method="POST" novalidate>
       <div class="mb-3">
@@ -38,21 +66,25 @@
       </div>
       <button type="submit" class="btn btn-success">Submit</button>
     </form>
-  
+    <% } %>
     <div class="reviews">
       <% for( let review of campground.reviews ) { %>
       <div class="card mb-3 rating-card">
         <div class="card-body">
-          <p class="card-title rating">Rating: <%= review.rating %></p>
+          
+          <h5 class="card-title rating">Rating: <%= review.rating %></h5>
+          <h6 class="card-subtitle mb-2 text-muted">By: <%= review.author.username %></h6>
           <p class="card-text">Review: <%= review.body %></p>
+          <% if (currentUser && currentUser._id.equals(review.author._id)) { %> 
           <form action="/campgrounds/<%= campground._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
             <button type="submit" class="btn btn-sm btn-danger">Delete</button>
           </form>
+          <% } %> 
         </div>  
       </div>
       <% } %>
     </div>
   </div>
-  </div>
-
 </div>
+
+

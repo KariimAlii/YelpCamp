@@ -20,18 +20,11 @@ const ExpressError = require("../utils/ExpressError");
 const catchAsync = require("../utils/catchAsync");
 
 //==========IMPORT MODELS==========//
-const Campground = require("../models/campground");
-const Review = require("../models/review");
+
 const User = require("../models/user");
-//==========IMPORT Joi Schemas==========//
-const { reviewSchema } = require("../schemas.js");
+
 //===========================middleware============================//
-const checkReturnTo = (req,res,next) => {
-    if (req.session.returnTo) {
-        res.locals.returnTo = req.session.returnTo; 
-    }
-    next();
-}
+const { checkReturnTo } = require("../middleware");
 //===========================Authentication============================//
 //==============================Passport===============================//
 const passport = require("passport");
@@ -78,6 +71,7 @@ router.post(
         failureMessage: true,
         failureFlash: true,
         //keepSessionInfo: true, /* keeps the value of (req.session.returnTo) ==> security issues */
+        // for security issues (passport.authenticate) deletes (req.session) properties automatically
     }),
     (req, res) => {
         req.flash("success", "Welcome back!");
@@ -96,9 +90,10 @@ router.get("/logout", (req, res, next) => {
 /*****************************************************************/
 module.exports = router;
 /*****************************************************************/
-/**
+/*
 Colt Steele    K123
 Karim Ali      R123
 Motaz          M123
 Ali            A123
- */
+Rana           K123
+*/

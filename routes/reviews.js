@@ -24,7 +24,7 @@ const Review = require("../models/review");
 //==========IMPORT Joi Schemas==========//
 const { reviewSchema } = require("../schemas.js");
 //==========IMPORT Middleware==========//
-const { isLoggedIn } = require("../middleware");
+const { isLoggedIn , isAuthor , isReviewAuthor } = require("../middleware");
 //=========================Validation Middleware=========================//
 
 const validateReview = (req, res, next) => {
@@ -45,11 +45,12 @@ app.use("/campgrounds", campgroundsRouter);
 //============C : A New Review============//
 router.post(
     "/",
+    isLoggedIn,
     validateReview,
     catchAsync(async (req, res, next) => {
         const campground = await Campground.findById(req.params.id);
         const review = new Review(req.body.review);
-
+        review.author = req.user._id;
         campground.reviews.push(review);
 
         await review.save();
@@ -62,6 +63,8 @@ router.post(
 //============D : Delete a Review============//
 router.delete(
     "/:reviewID",
+    isLoggedIn,
+    isReviewAuthor,
     catchAsync(async (req, res, next) => {
         const { id, reviewID } = req.params;
 
