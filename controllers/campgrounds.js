@@ -1,0 +1,67 @@
+const Campground = require("../models/campground");
+const ExpressError = require("../utils/ExpressError");
+const catchAsync = require("../utils/catchAsync");
+
+module.exports.index = catchAsync(async (req, res) => {
+    const campgrounds = await Campground.find({});
+    res.render("campgrounds/index", { campgrounds });
+});
+module.exports.renderNewForm = (req, res) => {
+    res.render("campgrounds/new");
+};
+module.exports.createCamp = catchAsync(async (req, res, next) => {
+    //if (!req.body.campground) throw new ExpressError("Invalid Campground Data", 400);
+    const campground = new Campground(req.body.campground);
+    campground.author = req.user._id;
+    await campground.save();
+    req.flash("success", "You created a new campground");
+    res.redirect(`/campgrounds/${campground._id}`);
+});
+module.exports.showCamp = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const campground = await Campground.findById(id)
+        .populate({
+            path: "reviews",
+            populate: {
+                path: "author",
+            },
+        })
+        .populate("author");
+    if (!campground) {
+        req.flash("error", "Cannot find that campground!");
+        return res.redirect("/campgrounds");
+    }
+
+    //console.log(res.locals.currentUser)
+    //console.log(campground.author)
+    // Note: either you can compare (res.locals.currentUser) with (campground.author) or you can compare their ObjectId
+    res.render("campgrounds/show", { campground });
+});
+module.exports.renderEditForm = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const campground = await Campground.findById(id);
+    if (!campground) {
+        req.flash("error", "Cannot find that campground!");
+        return res.redirect("/campgrounds");
+    }
+    res.render("campgrounds/edit", { campground });
+});
+module.exports.updateCamp = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const campground = await Campground.findByIdAndUpdate(
+        id,
+        req.body.campground, // {...req.body.campground}
+        {
+            runValidators: true,
+            new: true,
+        }
+    );
+    req.flash("success", "Successfully updated campground!");
+    res.redirect(`/campgrounds/${campground._id}`);
+});
+module.exports.deleteCamp = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    await Campground.findByIdAndDelete(id);
+    req.flash("success", "Successfully removed the campground!");
+    res.redirect("/campgrounds");
+});

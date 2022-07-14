@@ -2,7 +2,12 @@
 //================Models=============//
 const Campground = require("./models/campground");
 const Review = require("./models/review");
-
+//==========IMPORT Joi Schemas==========//
+const { campgroundSchema, reviewSchema } = require("./schemas.js");
+//==========IMPORT UTILS==========//
+const ExpressError = require("./utils/ExpressError");
+/*******************************************************************************************************/
+/*******************************************************************************************************/
 module.exports.isLoggedIn = (req, res, next) => {
     //console.log("REQ.USER===>", req.user);
     if (!req.isAuthenticated()) {
@@ -22,7 +27,7 @@ module.exports.checkReturnTo = (req, res, next) => {
     next();
 };
 
-module.exports.isAuthor = async (req, res, next) => {
+module.exports.isCampAuthor = async (req, res, next) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
     // without populating .. campground.author === ObjectId of the user that created the campground
@@ -41,4 +46,24 @@ module.exports.isReviewAuthor = async (req, res, next) => {
         return res.redirect(`/campgrounds/${id}`);
     }
     next();
+};
+module.exports.validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map((el) => el.message).join(",");
+        console.log(msg);
+        throw new ExpressError(msg, 400);
+    } else {
+        next();
+    }
+};
+module.exports.validateCampground = (req, res, next) => {
+    const { error } = campgroundSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map((el) => el.message).join(",");
+        console.log(msg);
+        throw new ExpressError(msg, 400);
+    } else {
+        next();
+    }
 };

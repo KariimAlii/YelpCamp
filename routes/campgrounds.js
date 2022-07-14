@@ -3,17 +3,6 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const router = express.Router();
-const bodyParser = require("body-parser");
-const ejsMate = require("ejs-mate");
-const methodOverride = require("method-override");
-//==============================SETTING===============================//
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-app.engine("ejs", ejsMate);
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(methodOverride("_method"));
-app.use(express.static(path.join(__dirname, "public")));
 //==============================FLASH==============================//
 const flash = require("connect-flash");
 app.use(flash());
@@ -27,119 +16,31 @@ const Review = require("../models/review");
 //==========IMPORT Joi Schemas==========//
 const { campgroundSchema } = require("../schemas.js");
 //==========IMPORT Middleware==========//
-const { isLoggedIn, isAuthor } = require("../middleware");
-//=========================Validation Middleware=========================//
-const validateCampground = (req, res, next) => {
-    const { error } = campgroundSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map((el) => el.message).join(",");
-        console.log(msg);
-        throw new ExpressError(msg, 400);
-    } else {
-        next();
-    }
-};
+const {
+    isLoggedIn,
+    isCampAuthor,
+    validateCampground,
+} = require("../middleware");
+//=========================Import Controllers=========================//
+const campgrounds = require("../controllers/campgrounds");
 
 //========= [/campgrounds/....] ==========//
+router
+    .route("/")
+    .get(campgrounds.index) //==R : INDEX==//
+    .post(isLoggedIn, validateCampground, campgrounds.createCamp); //==C : A New Campground==//
 
-//============R : INDEX============//
-router.get(
-    "/",
-    catchAsync(async (req, res) => {
-        const campgrounds = await Campground.find({});
-        res.render("campgrounds/index", { campgrounds });
-    })
-);
 //============R : A New Campground FORM============//
-router.get("/new", isLoggedIn, (req, res) => {
-    res.render("campgrounds/new");
-});
+router.get("/new", isLoggedIn, campgrounds.renderNewForm);
 
-//============R : A Campground Details============//
-router.get(
-    "/:id",
-    catchAsync(async (req, res) => {
-        const { id } = req.params;
-        const campground = await Campground.findById(id)
-            .populate({
-                path: "reviews",
-                populate: {
-                    path: "author",
-                },
-            })
-            .populate("author");
-        if (!campground) {
-            req.flash("error", "Cannot find that campground!");
-            return res.redirect("/campgrounds");
-        }
+router
+    .route("/:id")
+    .get( campgrounds.showCamp)//==R : A Campground Details==//
+    .put(isLoggedIn,isCampAuthor,validateCampground,campgrounds.updateCamp)//===U : Update a Campground====//
+    .delete(isCampAuthor, campgrounds.deleteCamp);//==D : Delete a Campground==//
 
-        //console.log(res.locals.currentUser)
-        //console.log(campground.author)
-        // Note: either you can compare (res.locals.currentUser) with (campground.author) or you can compare their ObjectId
-        res.render("campgrounds/show", { campground });
-    })
-);
-//============R : Edit Campground FORM============//
-router.get(
-    "/:id/edit",
-    isLoggedIn,
-    isAuthor,
-    catchAsync(async (req, res) => {
-        const { id } = req.params;
-        const campground = await Campground.findById(id);
-        if (!campground) {
-            req.flash("error", "Cannot find that campground!");
-            return res.redirect("/campgrounds");
-        }
-        res.render("campgrounds/edit", { campground });
-    })
-);
-//============C : A New Campground============//
-router.post(
-    "/",
-    isLoggedIn,
-    validateCampground,
-    catchAsync(async (req, res, next) => {
-        //if (!req.body.campground) throw new ExpressError("Invalid Campground Data", 400);
-        const campground = new Campground(req.body.campground);
-        campground.author = req.user._id;
-        await campground.save();
-        req.flash("success", "You created a new campground");
-        res.redirect(`/campgrounds/${campground._id}`);
-    })
-);
-
-//============U : Update a Campground============//
-router.put(
-    "/:id",
-    isLoggedIn,
-    isAuthor,
-    validateCampground,
-    catchAsync(async (req, res) => {
-        const { id } = req.params;
-        const campground = await Campground.findByIdAndUpdate(
-            id,
-            req.body.campground, // {...req.body.campground}
-            {
-                runValidators: true,
-                new: true,
-            }
-        );
-        req.flash("success", "Successfully updated campground!");
-        res.redirect(`/campgrounds/${campground._id}`);
-    })
-);
-//============D : Delete a Campground============//
-router.delete(
-    "/:id",
-    isAuthor,
-    catchAsync(async (req, res) => {
-        const { id } = req.params;
-        await Campground.findByIdAndDelete(id);
-        req.flash("success", "Successfully removed the campground!");
-        res.redirect("/campgrounds");
-    })
-);
+    //============R : Edit Campground FORM============//
+router.get("/:id/edit", isLoggedIn, isCampAuthor, campgrounds.renderEditForm);
 
 /*******************************************************************/
 module.exports = router;

@@ -24,61 +24,23 @@ const Review = require("../models/review");
 //==========IMPORT Joi Schemas==========//
 const { reviewSchema } = require("../schemas.js");
 //==========IMPORT Middleware==========//
-const { isLoggedIn , isAuthor , isReviewAuthor } = require("../middleware");
-//=========================Validation Middleware=========================//
-
-const validateReview = (req, res, next) => {
-    const { error } = reviewSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map((el) => el.message).join(",");
-        console.log(msg);
-        throw new ExpressError(msg, 400);
-    } else {
-        next();
-    }
-};
+const {
+    isLoggedIn,
+    isAuthor,
+    isReviewAuthor,
+    validateReview,
+} = require("../middleware");
+//============================IMPORT CONTROLLERS============================//
+const reviews = require("../controllers/reviews");
 //============================Routes============================//
 const campgroundsRouter = require("./campgrounds");
 app.use("/campgrounds", campgroundsRouter);
 //========= [/campgrounds/:id/reviews....] ==========//
 
 //============C : A New Review============//
-router.post(
-    "/",
-    isLoggedIn,
-    validateReview,
-    catchAsync(async (req, res, next) => {
-        const campground = await Campground.findById(req.params.id);
-        const review = new Review(req.body.review);
-        review.author = req.user._id;
-        campground.reviews.push(review);
-
-        await review.save();
-        await campground.save();
-
-        req.flash("success", "Created new review!");
-        res.redirect(`/campgrounds/${campground._id}`);
-    })
-);
+router.post("/", isLoggedIn, validateReview, reviews.createReview);
 //============D : Delete a Review============//
-router.delete(
-    "/:reviewID",
-    isLoggedIn,
-    isReviewAuthor,
-    catchAsync(async (req, res, next) => {
-        const { id, reviewID } = req.params;
-
-        await Review.findByIdAndDelete(reviewID);
-        const campground = await Campground.findByIdAndUpdate(id, {
-            $pull: { reviews: reviewID },
-        });
-
-        //console.log(campground.reviews);
-        //console.log(reviewID);
-        req.flash('success','Successfully deleted review!')
-        res.redirect(`/campgrounds/${id}`);
-    })
-);
+router.delete("/:reviewID", isLoggedIn, isReviewAuthor, reviews.deleteReview);
 
 /*******************************************************************/
 module.exports = router;
