@@ -6,50 +6,70 @@
 				{
 					"line": 1,
 					"column": 0,
+					"label": "ENVIRONMENT"
+				},
+				{
+					"line": 7,
+					"column": 0,
 					"label": "Definitions"
 				},
 				{
-					"line": 18,
+					"line": 16,
+					"column": 0,
+					"label": "Setting"
+				},
+				{
+					"line": 26,
 					"column": 0,
 					"label": "Modules"
 				},
 				{
-					"line": 52,
+					"line": 37,
+					"column": 0,
+					"label": "Session"
+				},
+				{
+					"line": 54,
+					"column": 0,
+					"label": "Flash"
+				},
+				{
+					"line": 60,
 					"column": 0,
 					"label": "Authentication"
 				},
 				{
-					"line": 64,
+					"line": 72,
 					"column": 0,
 					"label": "RES.LOCALS"
 				},
 				{
-					"line": 75,
+					"line": 83,
 					"column": 0,
 					"label": "Mongoose"
 				},
 				{
-					"line": 86,
+					"line": 94,
 					"column": 0,
 					"label": "Routes"
 				},
 				{
-					"line": 95,
+					"line": 103,
 					"column": 0,
 					"label": "R:Home"
 				},
 				{
-					"line": 108,
+					"line": 116,
 					"column": 0,
 					"label": "Unmatched Req"
 				},
 				{
-					"line": 117,
+					"line": 125,
 					"column": 0,
 					"label": "Error Handler"
 				},
 				{
-					"line": 124,
+					"line": 132,
 					"column": 0,
 					"label": "SERVER"
 				}
@@ -59,37 +79,37 @@
 			"path": "routes/campgrounds.js",
 			"bookmarks": [
 				{
-					"line": 29,
+					"line": 33,
 					"column": 0,
 					"label": "R: Index"
 				},
 				{
-					"line": 30,
-					"column": 0,
+					"line": 34,
+					"column": 4,
 					"label": "C: New Camp"
 				},
 				{
-					"line": 33,
+					"line": 48,
 					"column": 0,
 					"label": "R:newCampForm"
 				},
 				{
-					"line": 37,
+					"line": 52,
 					"column": 4,
 					"label": "R: Camp Details"
 				},
 				{
-					"line": 38,
+					"line": 53,
 					"column": 0,
 					"label": "U: Update Camp"
 				},
 				{
-					"line": 39,
+					"line": 54,
 					"column": 0,
 					"label": "D: Delete Camp"
 				},
 				{
-					"line": 42,
+					"line": 57,
 					"column": 0,
 					"label": "R: Edit Camp Form"
 				}
@@ -184,37 +204,37 @@
 			"path": "controllers/campgrounds.js",
 			"bookmarks": [
 				{
-					"line": 4,
+					"line": 7,
 					"column": 0,
 					"label": "R: Index"
 				},
 				{
-					"line": 8,
+					"line": 11,
 					"column": 0,
 					"label": "R: New Camp Form"
 				},
 				{
-					"line": 11,
+					"line": 14,
 					"column": 0,
-					"label": "C: New Camp"
+					"label": "C: Create Camp"
 				},
 				{
-					"line": 19,
+					"line": 27,
 					"column": 0,
 					"label": "R: Camp Details"
 				},
 				{
-					"line": 39,
+					"line": 47,
 					"column": 0,
 					"label": "R: Edit Form"
 				},
 				{
-					"line": 48,
+					"line": 56,
 					"column": 0,
 					"label": "U: Update Camp"
 				},
 				{
-					"line": 61,
+					"line": 89,
 					"column": 0,
 					"label": "D: Delete Camp"
 				}

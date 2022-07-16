@@ -3,9 +3,22 @@ const Review = require("./review");
 const User = require("./user");
 const Schema = mongoose.Schema;
 
+//Resize the image to a width of 100 pixels while maintaining aspect ratio (c_scale,w_100):
+//https://res.cloudinary.com/karim-ali/image/upload/v1657933403/YelpCamp/ztvjeyfiykjnjnlzphh7.jpg
+//https://res.cloudinary.com/<cloud_name>/<asset_type>/<delivery_type>/<transformations>/<version>/<public_id_full_path>.<extension>
+const imageSchema = new Schema({
+    url: String, // req.file.path(cloudinary)
+    filename: String, //req.file.filename(cloudinary)
+});
+imageSchema.virtual("thumbnail").get(function () {
+    return this.url.replace("upload/", "upload/c_scale,w_300/");
+});
+imageSchema.virtual("adjustHeight").get(function () {
+    return this.url.replace("upload/", "upload/c_scale,h_600/");
+});
 const CampgroundSchema = new Schema({
     title: String,
-    image: String,
+    images: [imageSchema], //array of objects
     price: Number,
     description: String,
     location: String,

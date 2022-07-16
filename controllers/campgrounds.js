@@ -1,7 +1,10 @@
+//========================Importing Modules=======================//
 const Campground = require("../models/campground");
 const ExpressError = require("../utils/ExpressError");
 const catchAsync = require("../utils/catchAsync");
-
+const { cloudinary } = require("../cloudinary");
+/*************************************************************************************/
+/*************************************************************************************/
 module.exports.index = catchAsync(async (req, res) => {
     const campgrounds = await Campground.find({});
     res.render("campgrounds/index", { campgrounds });
@@ -10,10 +13,15 @@ module.exports.renderNewForm = (req, res) => {
     res.render("campgrounds/new");
 };
 module.exports.createCamp = catchAsync(async (req, res, next) => {
-    //if (!req.body.campground) throw new ExpressError("Invalid Campground Data", 400);
     const campground = new Campground(req.body.campground);
+
     campground.author = req.user._id;
+    campground.images = req.files.map((image) => {
+        return { url: image.path, filename: image.filename };
+    });
+
     await campground.save();
+    console.log(campground);
     req.flash("success", "You created a new campground");
     res.redirect(`/campgrounds/${campground._id}`);
 });
@@ -48,6 +56,8 @@ module.exports.renderEditForm = catchAsync(async (req, res) => {
 });
 module.exports.updateCamp = catchAsync(async (req, res) => {
     const { id } = req.params;
+    //console.log(req.body,req.files);
+    //===============Updating campground Info using (req.body.campground)object================//
     const campground = await Campground.findByIdAndUpdate(
         id,
         req.body.campground, // {...req.body.campground}
@@ -56,11 +66,32 @@ module.exports.updateCamp = catchAsync(async (req, res) => {
             new: true,
         }
     );
+    //===============Adding new Images using (req.files)array================//
+    const newImages = req.files.map((image) => {
+        return { url: image.path, filename: image.filename };
+    });
+    campground.images.unshift(...newImages);
+    await campground.save();
+    //===============Deleting Some Images using (req.body.deleteImages)array================//
+    if (req.body.deleteImages) {
+        //===delete from cloudinary====//
+        for (let filename of req.body.deleteImages) {
+            await cloudinary.uploader.destroy(filename);
+        }
+        //===delete from mongo database====//
+        await campground.updateOne({
+            $pull: { images: { filename: { $in: req.body.deleteImages } } },
+        });
+    }
     req.flash("success", "Successfully updated campground!");
     res.redirect(`/campgrounds/${campground._id}`);
 });
 module.exports.deleteCamp = catchAsync(async (req, res) => {
     const { id } = req.params;
+    const campground = await Campground.findById(id);
+    for (let image of campground.images) {
+        await cloudinary.uploader.destroy(image.filename);
+    }
     await Campground.findByIdAndDelete(id);
     req.flash("success", "Successfully removed the campground!");
     res.redirect("/campgrounds");

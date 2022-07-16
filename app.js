@@ -1,8 +1,15 @@
+//=========================Environment Variables=========================//
+if (process.env.NODE_ENV !== "production") {
+    // => we want to require (dotenv) only in development mode
+    require("dotenv").config();
+}
+// Note: By Default => process.env.NODE_ENV === 'development'
 //==============================DEFINITION===============================//
 const express = require("express");
 const app = express();
 const path = require("path");
 const bodyParser = require("body-parser");
+
 const ejsMate = require("ejs-mate");
 const methodOverride = require("method-override");
 
@@ -14,6 +21,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
+
 //============================IMPORT MODULES============================//
 //==========IMPORT MODELS==========//
 const Campground = require("./models/campground");
