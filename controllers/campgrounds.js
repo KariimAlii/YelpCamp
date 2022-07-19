@@ -3,6 +3,19 @@ const Campground = require("../models/campground");
 const ExpressError = require("../utils/ExpressError");
 const catchAsync = require("../utils/catchAsync");
 const { cloudinary } = require("../cloudinary");
+//========================Mapbox=======================//
+//=====first:creating service client=====//
+const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
+const mapboxToken = process.env.MAPBOX_TOKEN;
+const geocodingClient = mbxGeocoding({
+    accessToken:mapboxToken,
+});
+/*
+const responce = await geocodingClient.forwardGeocode({
+    query: "",
+});
+we need => responce.body
+*/
 /*************************************************************************************/
 /*************************************************************************************/
 module.exports.index = catchAsync(async (req, res) => {
@@ -13,13 +26,19 @@ module.exports.renderNewForm = (req, res) => {
     res.render("campgrounds/new");
 };
 module.exports.createCamp = catchAsync(async (req, res, next) => {
-    const campground = new Campground(req.body.campground);
+    const geoData = await geocodingClient
+        .forwardGeocode({
+            query: req.body.campground.location,
+            limit: 1,
+        })
+        .send();
 
-    campground.author = req.user._id;
+    const campground = new Campground(req.body.campground);
+    campground.geometry = geoData.body.features[0].geometry;
     campground.images = req.files.map((image) => {
         return { url: image.path, filename: image.filename };
     });
-
+    campground.author = req.user._id;
     await campground.save();
     console.log(campground);
     req.flash("success", "You created a new campground");
@@ -56,7 +75,14 @@ module.exports.renderEditForm = catchAsync(async (req, res) => {
 });
 module.exports.updateCamp = catchAsync(async (req, res) => {
     const { id } = req.params;
-    //console.log(req.body,req.files);
+        //console.log(req.body,req.files);
+    //===============Editing Location================//
+    const geoData = await geocodingClient
+    .forwardGeocode({
+        query: req.body.campground.location,
+        limit: 1,
+    })
+    .send();
     //===============Updating campground Info using (req.body.campground)object================//
     const campground = await Campground.findByIdAndUpdate(
         id,
@@ -66,6 +92,8 @@ module.exports.updateCamp = catchAsync(async (req, res) => {
             new: true,
         }
     );
+    //===============Editing Location================//
+    campground.geometry = geoData.body.features[0].geometry;
     //===============Adding new Images using (req.files)array================//
     const newImages = req.files.map((image) => {
         return { url: image.path, filename: image.filename };

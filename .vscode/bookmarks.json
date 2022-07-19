@@ -204,37 +204,37 @@
 			"path": "controllers/campgrounds.js",
 			"bookmarks": [
 				{
-					"line": 7,
+					"line": 20,
 					"column": 0,
 					"label": "R: Index"
 				},
 				{
-					"line": 11,
+					"line": 24,
 					"column": 0,
 					"label": "R: New Camp Form"
 				},
 				{
-					"line": 14,
+					"line": 27,
 					"column": 0,
 					"label": "C: Create Camp"
 				},
 				{
-					"line": 27,
+					"line": 46,
 					"column": 0,
 					"label": "R: Camp Details"
 				},
 				{
-					"line": 47,
+					"line": 66,
 					"column": 0,
 					"label": "R: Edit Form"
 				},
 				{
-					"line": 56,
+					"line": 75,
 					"column": 0,
 					"label": "U: Update Camp"
 				},
 				{
-					"line": 89,
+					"line": 116,
 					"column": 0,
 					"label": "D: Delete Camp"
 				}

@@ -16,70 +16,100 @@ mongoose
         console.log(err);
     });
 
-    const gallery = [ // 8 objects
+const gallery = [
+    // 15 objects
     {
-        url:'https://res.cloudinary.com/karim-ali/image/upload/v1657854450/YelpCamp/uvwg8mx21e4ypg83sh1d.jpg',
-        filename:'YelpCamp/uvwg8mx21e4ypg83sh1d'
-
+        url: "https://res.cloudinary.com/karim-ali/image/upload/v1658156172/YelpCamp/tommy-lisbin-xr-y6Ruw7K8-unsplash_ygqpww.jpg",
+        filename: "YelpCamp/tommy-lisbin-xr-y6Ruw7K8-unsplash_ygqpww",
     },
     {
-        url:'https://res.cloudinary.com/karim-ali/image/upload/v1657854450/YelpCamp/naakgrpehap9qykzkfug.jpg',
-        filename:'YelpCamp/naakgrpehap9qykzkfug'
-
+        url: "https://res.cloudinary.com/karim-ali/image/upload/v1658156127/YelpCamp/luke-ellis-craven-HKElxYGTXsE-unsplash_e07fyh.jpg",
+        filename: "YelpCamp/luke-ellis-craven-HKElxYGTXsE-unsplash_e07fyh",
     },
     {
-        url:'https://res.cloudinary.com/karim-ali/image/upload/v1657854449/YelpCamp/wldlryd2lwvzxoerymiy.jpg',
-        filename:'YelpCamp/wldlryd2lwvzxoerymiy'
-
+        url: "https://res.cloudinary.com/karim-ali/image/upload/v1658156108/YelpCamp/casey-horner-4rDCa5hBlCs-unsplash_yjf0ge.jpg",
+        filename: "YelpCamp/casey-horner-4rDCa5hBlCs-unsplash_yjf0ge",
     },
     {
-        url:'https://res.cloudinary.com/karim-ali/image/upload/v1657854447/YelpCamp/b0nrwkumzfsdkfnuypqr.jpg',
-        filename:'YelpCamp/b0nrwkumzfsdkfnuypqr'
-
-    }, 
-    {
-        url:'https://res.cloudinary.com/karim-ali/image/upload/v1657854445/YelpCamp/onpbuofzyas0uq2ywwrl.jpg',
-        filename:'YelpCamp/onpbuofzyas0uq2ywwrl'
-
+        url: "https://res.cloudinary.com/karim-ali/image/upload/v1658156102/YelpCamp/tim-swaan-eOpewngf68w-unsplash_adkxhi.jpg",
+        filename: "YelpCamp/tim-swaan-eOpewngf68w-unsplash_adkxhi",
     },
     {
-        url:'https://res.cloudinary.com/karim-ali/image/upload/v1657854004/YelpCamp/vclato839yylei9v24lb.jpg',
-        filename:'YelpCamp/vclato839yylei9v24lb'
-
+        url: "https://res.cloudinary.com/karim-ali/image/upload/v1658156053/YelpCamp/gantas-vaiciulenas-QchymJS9iJ0-unsplash_t0z0ma.jpg",
+        filename: "YelpCamp/gantas-vaiciulenas-QchymJS9iJ0-unsplash_t0z0ma",
     },
     {
-        url:'https://res.cloudinary.com/karim-ali/image/upload/v1657844510/YelpCamp/uceigxj9vp74ybwt0jgo.jpg',
-        filename:'YelpCamp/uceigxj9vp74ybwt0jgo'
-
+        url: "https://res.cloudinary.com/karim-ali/image/upload/v1658156023/YelpCamp/kevin-schmid--grs8iMGqQE-unsplash_ulyade.jpg",
+        filename: "YelpCamp/kevin-schmid--grs8iMGqQE-unsplash_ulyade",
     },
     {
-        url:'https://res.cloudinary.com/karim-ali/image/upload/v1657844508/YelpCamp/wxe2nxmzb2ecasaxqp06.jpg',
-        filename:'YelpCamp/wxe2nxmzb2ecasaxqp06'
-
-    }
-
-]
+        url: "https://res.cloudinary.com/karim-ali/image/upload/v1658156023/YelpCamp/vincent-guth-UhGZ-k6EB_g-unsplash_updqkb.jpg",
+        filename: "YelpCamp/vincent-guth-UhGZ-k6EB_g-unsplash_updqkb",
+    },
+    {
+        url: "https://res.cloudinary.com/karim-ali/image/upload/v1658156021/YelpCamp/warren-wong-QqoqjtYYpkc-unsplash_fsmjoa.jpg",
+        filename: "YelpCamp/warren-wong-QqoqjtYYpkc-unsplash_fsmjoa",
+    },
+    {
+        url: "https://res.cloudinary.com/karim-ali/image/upload/v1658156018/YelpCamp/skyler-smith-PrWCJQcqGI0-unsplash_jnchph.jpg",
+        filename: "YelpCamp/skyler-smith-PrWCJQcqGI0-unsplash_jnchph",
+    },
+    {
+        url: "https://res.cloudinary.com/karim-ali/image/upload/v1658156001/YelpCamp/jeff-finley-m2NqjpyjaSo-unsplash_lta2t9.jpg",
+        filename: "YelpCamp/jeff-finley-m2NqjpyjaSo-unsplash_lta2t9",
+    },
+    {
+        url: "https://res.cloudinary.com/karim-ali/image/upload/v1658155996/YelpCamp/kevin-erdvig-BdfHZ4LH11A-unsplash_m0cn6u.jpg",
+        filename: "YelpCamp/kevin-erdvig-BdfHZ4LH11A-unsplash_m0cn6u",
+    },
+    {
+        url: "https://res.cloudinary.com/karim-ali/image/upload/v1658155992/YelpCamp/redd-VnT16lAOFiE-unsplash_gaosow.jpg",
+        filename: "YelpCamp/redd-VnT16lAOFiE-unsplash_gaosow",
+    },
+    {
+        url: "https://res.cloudinary.com/karim-ali/image/upload/v1658155991/YelpCamp/chris-schog-EnCaUE4QNOw-unsplash_gnrnl0.jpg",
+        filename: "YelpCamp/chris-schog-EnCaUE4QNOw-unsplash_gnrnl0",
+    },
+    {
+        url: "https://res.cloudinary.com/karim-ali/image/upload/v1658155990/YelpCamp/siim-lukka-f6OOjJNcuzA-unsplash_c0jza9.jpg",
+        filename: "YelpCamp/siim-lukka-f6OOjJNcuzA-unsplash_c0jza9",
+    },
+    {
+        url: "https://res.cloudinary.com/karim-ali/image/upload/v1658155979/YelpCamp/joshua-earle-tUb9a0RB04k-unsplash_goez5q.jpg",
+        filename: "YelpCamp/joshua-earle-tUb9a0RB04k-unsplash_goez5q",
+    },
+];
 
 // to pick a random item with index from ( 0 ~ array.length )
 const sample = (array) => array[Math.floor(Math.random() * array.length) + 0];
 
 const seedDB = async () => {
     await Campground.deleteMany({});
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 300; i++) {
         try {
-
             const random1000 = Math.floor(Math.random() * 1000) + 0; // 0 ~ 1000
             // cities array contains 1000 objects => cities.length = 1000
-            const galleryIndex = Math.floor(Math.random() * 6) + 1; // 1 ~ 6
+            const galleryIndex = Math.floor(Math.random() * 13) + 1; // 1 ~ 13
             const price = Math.floor(Math.random() * 20) + 10; // 10 ~ 20 $
             const camp = new Campground({
                 author: "62ce295a05a9928ec1c3151e",
                 location: `${cities[random1000].city} , ${cities[random1000].state}`,
                 title: `${sample(descriptors)} ${sample(places)}`,
-                images: [ gallery[galleryIndex], gallery[galleryIndex + 1], gallery[galleryIndex - 1] ],
+                images: [
+                    gallery[galleryIndex],
+                    gallery[galleryIndex + 1],
+                    gallery[galleryIndex - 1],
+                ],
                 description:
                     "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat necessitatibus, aliquam inventore excepturi cumque quam. Ipsum in eum repellat eligendi consequuntur molestiae, aperiam ea molestias cumque animi nesciunt, ducimus harum",
                 price, //price:price ==> price (shorthand)
+                geometry: {
+                    type: "Point",
+                    coordinates: [
+                        cities[random1000].longitude,
+                        cities[random1000].latitude,
+                    ],
+                },
             });
             await camp.save();
         } catch {
@@ -136,7 +166,3 @@ count ==>	The number of photos to return. (Default: 1; max: 30)
 
 
 */
-
-
-
-
