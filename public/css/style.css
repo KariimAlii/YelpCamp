@@ -1,5 +1,14 @@
 body {
     background: linear-gradient(to right, #ee9ca7, #ffdde1); 
+    height: 100vh;
+}
+.adjust {
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: calc(100vh - 112px);
+
 }
 .card {
     
@@ -25,4 +34,7 @@ body {
 }
 .h-500 {
     height: 500px;
+}
+.h-56 {
+    height:56px;
 }

@@ -136,4 +136,6 @@ map.on("load", () => {
     map.on("mouseleave", "unclustered-point", () => {
         map.getCanvas().style.cursor = "";
     });
+
+    map.addControl(new mapboxgl.NavigationControl());
 });

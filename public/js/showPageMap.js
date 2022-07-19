@@ -40,7 +40,7 @@ const map = new mapboxgl.Map({
 map.on("style.load", () => {
     map.setFog({}); // Set the default atmosphere style
 });
-
+map.addControl(new mapboxgl.NavigationControl());
 const marker = new mapboxgl.Marker({ color: "red", scale: 1.5 })
     .setLngLat(campground.geometry.coordinates)
     .setPopup(popup)
@@ -146,3 +146,4 @@ map2.on("style.load", () => {
     });
     map2.setFog({});
 });
+map2.addControl(new mapboxgl.NavigationControl());

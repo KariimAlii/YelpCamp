@@ -1,8 +1,8 @@
 <% layout('layouts/boilerplate') %> 
 
-    <div class="row card p-3">
+    <div class="row card p-3 my-5 shadow-lg">
         <h1 class="text-center my-5">Edit Campground</h1>
-        <div class="col-6 offset-3 p-0 mb-5">
+        <div class="col-md-6 offset-md-3 p-0 mb-5">
             <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST" class="validated-form" novalidate enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="title" class="form-label">Title</label>
@@ -35,10 +35,10 @@
                     <input type="file" name="image" id="image" class="form-control" multiple>
                     <label for="image" class="input-group-text">Add more images</label>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Do you want to delete some Images of the campground?</label>
+                <div class="mb-5 text-center d-flex flex-column align-items-center my-5 card p-3 border border-danger">
+                    <label class="form-label mb-5">Do you want to delete some Images of the campground?</label>
                     <% campground.images.forEach(function(img,i) { %>
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-3 d-flex justify-content-center">
                         <div class="input-group-text">
                           <input class="form-check-input mt-0 me-2" type="checkbox" id="image-<%= i %>" name="deleteImages[]" value="<%= img.filename %>">
                           <label for="image-<%= i %>">Delete</label>                        
