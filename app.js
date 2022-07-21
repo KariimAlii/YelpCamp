@@ -57,19 +57,46 @@ const catchAsync = require("./utils/catchAsync");
 const { campgroundSchema, reviewSchema } = require("./schemas.js");
 //==========IMPORT Middleware==========//
 const { isLoggedIn } = require("./middleware");
+//==============================MONGOOSE===============================//
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/yelpCamp";
+//"mongodb://localhost:27017/yelpCamp"
+//process.env.DB_URL
+mongoose
+    .connect(dbUrl)
+    .then(() => {
+        console.log("DATABASE CONNECTED!");
+    })
+    .catch((err) => {
+        console.log("MONGO ERROR OCCURED");
+        console.log(err);
+    });
+
 //==============================SESSION===============================//
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
+const secret = process.env.SESSION_SECRET || "MyDevelopmentModeSecret"; //It's indeed a best practice to keep values that are supposed to be secret either in a .env file (where we keep all environment variables) when working in the development stage, as we would avoid sharing that information when uploading that project to a Github repository, as the .env file wouldn't be uploaded. Therefore, you can move that information to your .env file, assigning that value to a variable like SESSION_SECRET for example, and then using process.env.SESSION_SECRET in your app.js file.
+
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60, //1 day in seconds
+    crypto: {
+        secret: secret,
+    },
+});
 const sessionConfig = {
     name: "yelpCampSession",
-    secret: process.env.SESSION_SECRET, //It's indeed a best practice to keep values that are supposed to be secret either in a .env file (where we keep all environment variables) when working in the development stage, as we would avoid sharing that information when uploading that project to a Github repository, as the .env file wouldn't be uploaded. Therefore, you can move that information to your .env file, assigning that value to a variable like SESSION_SECRET for example, and then using process.env.SESSION_SECRET in your app.js file.
+    secret: secret, 
     resave: false,
     saveUninitialized: true,
     cookie: {
         httpOnly: true, //Note be careful when setting this to true, as compliant clients will not allow client-side JavaScript to see the cookie in document.cookie.
         //secure:true, //Note be careful when setting this to true, as compliant clients will not send the cookie back to the server in the future if the browser does not have an HTTPS connection .. it requires an https-enabled website, i.e., HTTPS is necessary for secure cookies. If secure is set, and you access your site over HTTP, the cookie will not be set.
-        expires: Date.now() + 1000 * 60 * 60 * 24 * 7, //1week in ms
-        maxAge: 1000 * 60 * 60 * 24 * 7,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7, //1week from now in milliseconds
+        maxAge: 1000 * 60 * 60 * 24 * 7, //1week in milliseconds
     },
+    store: store,
 };
 
 app.use(session(sessionConfig));
@@ -102,18 +129,6 @@ app.use((req, res, next) => {
     res.locals.error = req.flash("error");
     next();
 });
-//==============================MONGOOSE===============================//
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-mongoose
-    .connect("mongodb://localhost:27017/yelpCamp")
-    .then(() => {
-        console.log("DATABASE CONNECTED!");
-    })
-    .catch((err) => {
-        console.log("MONGO ERROR OCCURED");
-        console.log(err);
-    });
 
 //============================Routes============================//
 const campgroundsRouter = require("./routes/campgrounds");
