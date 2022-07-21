@@ -1,13 +1,20 @@
+//==========REPL===============//
+const path = require("path");
+
+//const __dirname = path.resolve();
+//require("dotenv").config();
 //=========================Environment Variables=========================//
+
 if (process.env.NODE_ENV !== "production") {
     // => we want to require (dotenv) only in development mode
     require("dotenv").config();
 }
-// Note: By Default => process.env.NODE_ENV === 'development'
+
+// Note: By Default (we call it development mode) => process.env.NODE_ENV === undefined
 //==============================DEFINITION===============================//
 const express = require("express");
 const app = express();
-const path = require("path");
+
 const bodyParser = require("body-parser");
 
 const ejsMate = require("ejs-mate");
@@ -21,6 +28,22 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
+
+//******************************SECURITY***************************//
+//==================MONGO INJECTION===================//
+const mongoSanitize = require("express-mongo-sanitize");
+app.use(
+    mongoSanitize({
+        replaceWith: "_",
+    })
+);
+//==================Cross Site Scripting (XSS)===================//
+const sanitizeHtml = require("sanitize-html");
+//==================Security with HTTP Headers===================//
+const helmet = require("helmet");
+//app.use(helmet({contentSecurityPolicy:false}));
+
+//******************************SECURITY***************************//
 
 //============================IMPORT MODULES============================//
 //==========IMPORT MODELS==========//
@@ -37,19 +60,18 @@ const { isLoggedIn } = require("./middleware");
 //==============================SESSION===============================//
 const session = require("express-session");
 const sessionConfig = {
-    secret: "KimoComposer",
+    name: "yelpCampSession",
+    secret: process.env.SESSION_SECRET, //It's indeed a best practice to keep values that are supposed to be secret either in a .env file (where we keep all environment variables) when working in the development stage, as we would avoid sharing that information when uploading that project to a Github repository, as the .env file wouldn't be uploaded. Therefore, you can move that information to your .env file, assigning that value to a variable like SESSION_SECRET for example, and then using process.env.SESSION_SECRET in your app.js file.
     resave: false,
     saveUninitialized: true,
     cookie: {
-        httpOnly: true,
+        httpOnly: true, //Note be careful when setting this to true, as compliant clients will not allow client-side JavaScript to see the cookie in document.cookie.
+        //secure:true, //Note be careful when setting this to true, as compliant clients will not send the cookie back to the server in the future if the browser does not have an HTTPS connection .. it requires an https-enabled website, i.e., HTTPS is necessary for secure cookies. If secure is set, and you access your site over HTTP, the cookie will not be set.
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7, //1week in ms
         maxAge: 1000 * 60 * 60 * 24 * 7,
     },
 };
 
-//app.use(passport.authenticate('session'));
-
-//his can also be accomplished, more succinctly, using the passport.session() alias
 app.use(session(sessionConfig));
 //==============================Flash===============================//
 const flash = require("connect-flash");
@@ -66,12 +88,15 @@ const LocalStrategy = require("passport-local");
 //passport-local-mongoose adds a helper method createStrategy as static method to your schema. The createStrategy is responsible to setup passport-local LocalStrategy with the correct options.
 passport.use(User.createStrategy());
 //====login session=======//
+//app.use(passport.authenticate('session'));
+//his can also be accomplished, more succinctly, using the passport.session() alias
 app.use(passport.session());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 //==============================Res.Locals===============================//
 app.use((req, res, next) => {
-    //console.log(req.session);
+    //console.log(req.query); //query string
+    //console.log(req.session); // session
     res.locals.currentUser = req.user;
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
