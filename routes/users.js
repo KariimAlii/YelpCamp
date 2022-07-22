@@ -27,11 +27,4 @@ router.get("/logout", users.logout);
 /*****************************************************************/
 module.exports = router;
 /*****************************************************************/
-/*
-Colt Steele    K123
-Karim Ali      R123
-Motaz          M123
-Ali            A123
-Rana           K123
-krkr           krkr
-*/
+
