@@ -19,7 +19,7 @@ const bodyParser = require("body-parser");
 
 const ejsMate = require("ejs-mate");
 const methodOverride = require("method-override");
-
+const compression = require("compression");
 //==============================SETTING===============================//
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -28,7 +28,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
-
+app.use(compression());
 //******************************SECURITY***************************//
 //==================MONGO INJECTION===================//
 const mongoSanitize = require("express-mongo-sanitize");
@@ -87,7 +87,7 @@ const store = MongoStore.create({
 });
 const sessionConfig = {
     name: "yelpCampSession",
-    secret: secret, 
+    secret: secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
