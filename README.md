@@ -2,16 +2,23 @@
 ## [View Website](https://favyelpcamp.herokuapp.com/)
 ### 🔥 Fullstack Web Application using (Javascript / Node.js / Express.js / MongoDB)
 
-- Responsive Website Using HTML CSS & JavaScript
+- Dynamic Web Application
 - MVC Architecture
-- Dynamic Website
 - Web server using Express.js framework with Node.js
-- MongoDB with mongoose library
-- Storing campground images with Cloudinary drive
+- RESTful Routing
+- MongoDB with Mongoose library
+- Atlas MongoDB Cloud
+- File Upload to Cloudinary Drive
 - Geocoding using Mapbox Api
-- Authentication & Authorization using Passport.js
-- Security with Mongo Injection , Cross Site Scripting (XSS) and Http Headers
+- Authentication &  using Passport.js
+- Authorization for permissions of users
+- Data validation
+- Security with Mongo Injection , Cross Site Scripting (XSS) and 
+   Http Headers
 - Error Handling with Express.js
-- Compatible with all mobile devices and with a beautiful and pleasant user interface.
+- Compatible with all mobile devices and different screen sizes 
+- Statefulness using Http Sessions with data storage on Atlas
+   MongoDB Cloud
 
 💙 You can view my different projects and contact me through my [Website](https://karimali.netlify.app)
+
