@@ -4,9 +4,10 @@
 
 - Responsive Website Using HTML CSS & JavaScript
 - MVC Architecture
-- Dynamic Website that can generate and return content based on the specific HTTP requests.
+- Dynamic Website
 - Web server using Express.js framework with Node.js
 - MongoDB with mongoose library
+- Storing campground images with Cloudinary drive
 - Geocoding using Mapbox Api
 - Authentication & Authorization using Passport.js
 - Security with Mongo Injection , Cross Site Scripting (XSS) and Http Headers
