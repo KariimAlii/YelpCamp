@@ -1,6 +1,6 @@
 # 🔥 YelpCamp Application
 ## [View Website](https://favyelpcamp.herokuapp.com/)
-### 🔥 Fullstack Application using (Javascript / Node.js / Express.js / MongoDB)
+### 🔥 Fullstack Web Application using (Javascript / Node.js / Express.js / MongoDB)
 
 - Responsive Website Using HTML CSS & JavaScript
 - Dynamic Websites that can generate and return content based on the specific HTTP requests.
