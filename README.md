@@ -3,10 +3,14 @@
 ### 🔥 Fullstack Web Application using (Javascript / Node.js / Express.js / MongoDB)
 
 - Responsive Website Using HTML CSS & JavaScript
-- Dynamic Websites that can generate and return content based on the specific HTTP requests.
+- MVC Architecture
+- Dynamic Website that can generate and return content based on the specific HTTP requests.
 - Web server using Express.js framework with Node.js
-- MongoDB
+- MongoDB with mongoose library
 - Geocoding using Mapbox Api
+- Authentication & Authorization using Passport.js
+- Security with Mongo Injection , Cross Site Scripting (XSS) and Http Headers
+- Error Handling with Express.js
 - Compatible with all mobile devices and with a beautiful and pleasant user interface.
 
 💙 You can view my different projects and contact me through my [Website](https://karimali.netlify.app)
