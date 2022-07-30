@@ -4,72 +4,77 @@
 			"path": "app.js",
 			"bookmarks": [
 				{
-					"line": 1,
+					"line": 7,
 					"column": 0,
 					"label": "ENVIRONMENT"
 				},
 				{
-					"line": 7,
+					"line": 14,
 					"column": 0,
 					"label": "Definitions"
 				},
 				{
-					"line": 16,
+					"line": 23,
 					"column": 0,
 					"label": "Setting"
 				},
 				{
-					"line": 26,
+					"line": 33,
+					"column": 0,
+					"label": "Security"
+				},
+				{
+					"line": 49,
 					"column": 0,
 					"label": "Modules"
 				},
 				{
-					"line": 37,
+					"line": 60,
+					"column": 0,
+					"label": "MongoDB"
+				},
+				{
+					"line": 76,
 					"column": 0,
 					"label": "Session"
 				},
 				{
-					"line": 54,
+					"line": 103,
 					"column": 0,
 					"label": "Flash"
 				},
 				{
-					"line": 60,
+					"line": 109,
 					"column": 0,
 					"label": "Authentication"
 				},
 				{
-					"line": 72,
+					"line": 123,
 					"column": 0,
 					"label": "RES.LOCALS"
 				},
 				{
-					"line": 83,
-					"column": 0,
-					"label": "Mongoose"
-				},
-				{
-					"line": 94,
+					"line": 134,
 					"column": 0,
 					"label": "Routes"
 				},
 				{
-					"line": 103,
+					"line": 143,
 					"column": 0,
 					"label": "R:Home"
 				},
 				{
-					"line": 116,
+					"line": 156,
 					"column": 0,
 					"label": "Unmatched Req"
 				},
 				{
-					"line": 125,
+					"line": 165,
 					"column": 0,
 					"label": "Error Handler"
 				},
 				{
-					"line": 132,
+					"line": 173,
 					"column": 0,
 					"label": "SERVER"
 				}
@@ -157,11 +162,6 @@
 					"line": 25,
 					"column": 0,
 					"label": "Logout"
-				},
-				{
-					"line": 30,
-					"column": 0,
-					"label": "Users"
 				}
 			]
 		},
